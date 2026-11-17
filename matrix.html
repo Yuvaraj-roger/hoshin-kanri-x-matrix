@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<svg id="m" width="580" height="500" viewBox="0 0 580 500"
+     font-family="Arial" font-weight="bold">
+
+  <defs>
+    <clipPath id="clipBox">
+      <rect x="113" y="101" width="350" height="290"/>
+    </clipPath>
+  </defs>
+
+  <g id="boxes"></g>
+
+  <rect x="113" y="101" width="350" height="290" fill="white"/>
+
+  <g clip-path="url(#clipBox)">
+    <line x1="114.5" y1="102.5" x2="461.5" y2="389.5" stroke="#2f5597" stroke-width="3"/>
+    <line x1="461.5" y1="102.5" x2="114.5" y2="389.5" stroke="#2f5597" stroke-width="3"/>
+  </g>
+
+  <rect x="114.5" y="102.5" width="347" height="287"
+        fill="none" stroke="#2f5597" stroke-width="3"/>
+
+  <text x="288" y="150" text-anchor="middle" font-size="16" fill="#2f5597"
+        style="cursor:pointer; user-select:none" onclick="add('top')">Top-Level Priorities</text>
+
+  <text x="123" y="250" font-size="16" fill="#2f5597"
+        style="cursor:pointer; user-select:none" onclick="add('left')">Annual Objectives</text>
+
+  <text x="453" y="250" text-anchor="end" font-size="16" fill="#2f5597"
+        style="cursor:pointer; user-select:none" onclick="add('right')">Metrics to Improve</text>
+
+  <text x="288" y="350" text-anchor="middle" font-size="16" fill="#2f5597"
+        style="cursor:pointer; user-select:none" onclick="add('bottom')">Long-Term Goals</text>
+
+</svg>
+
+<script>
+  var count = { top: 0, bottom: 0, left: 0, right: 0 };
+
+  var BOX = 'fill="white" stroke="#666" stroke-width="1" ' +
+            'vector-effect="non-scaling-stroke" shape-rendering="crispEdges"';
+
+  // oru corner box create panra chinna function
+  function corner(g, row, col) {
+    var x = 463 + 18 * col;     // right column number
+    var y = 85 - 16 * row;      // top row number
+    g.insertAdjacentHTML("beforeend",
+      '<rect x="' + x + '" y="' + y + '" width="18" height="16" ' + BOX + '/>');
+  }
+
+  function add(side) {
+    if (count[side] >= 6) return;
+    var n = count[side];
+    var g = document.getElementById("boxes");
+    var s = "";
+
+    if (side == "top") {
+      var y = 85 - 16 * n;
+      s = '<rect x="113" y="' + y + '" width="350" height="16" ' + BOX + '/>' +
+          '<text x="288" y="' + (y + 8) + '" text-anchor="middle" dominant-baseline="central" font-size="12">Top-Level Priority</text>';
+    }
+
+    if (side == "bottom") {
+      var y = 391 + 16 * n;
+      s = '<rect x="113" y="' + y + '" width="350" height="16" ' + BOX + '/>' +
+          '<text x="288" y="' + (y + 8) + '" text-anchor="middle" dominant-baseline="central" font-size="12">Long-Term Goal</text>';
+    }
+
+    if (side == "left") {
+      var x = 95 - 18 * n;
+      s = '<rect x="' + x + '" y="101" width="18" height="290" ' + BOX + '/>' +
+          '<text x="' + (x + 9) + '" y="246" text-anchor="middle" dominant-baseline="central" font-size="12" transform="rotate(-90 ' + (x + 9) + ' 246)">Annual Objective</text>';
+    }
+
+    if (side == "right") {
+      var x = 463 + 18 * n;
+      s = '<rect x="' + x + '" y="101" width="18" height="290" ' + BOX + '/>' +
+          '<text x="' + (x + 9) + '" y="246" text-anchor="middle" dominant-baseline="central" font-size="12" transform="rotate(-90 ' + (x + 9) + ' 246)">Metric to Improve</text>';
+    }
+
+    g.insertAdjacentHTML("beforeend", s);
+    count[side]++;
+
+    // TOP click -> pudhu row + ippo irukkura ella right columns
+    if (side == "top") {
+      for (var j = 0; j < count.right; j++) corner(g, n, j);
+    }
+
+    // RIGHT click -> pudhu column + ippo irukkura ella top rows
+    if (side == "right") {
+      for (var i = 0; i < count.top; i++) corner(g, i, n);
+    }
+  }
+</script>
+
+</body>
+</html>
