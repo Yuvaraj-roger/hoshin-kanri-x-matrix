@@ -43,10 +43,10 @@
   var BOX = 'fill="white" stroke="#666" stroke-width="1" ' +
             'vector-effect="non-scaling-stroke" shape-rendering="crispEdges"';
 
-  // oru corner box create panra chinna function
+  
   function corner(g, row, col) {
-    var x = 463 + 18 * col;     // right column number
-    var y = 85 - 16 * row;      // top row number
+    var x = 463 + 18 * col;     
+    var y = 85 - 16 * row;     
     g.insertAdjacentHTML("beforeend",
       '<rect x="' + x + '" y="' + y + '" width="18" height="16" ' + BOX + '/>');
   }
@@ -84,12 +84,12 @@
     g.insertAdjacentHTML("beforeend", s);
     count[side]++;
 
-    // TOP click -> pudhu row + ippo irukkura ella right columns
+    
     if (side == "top") {
       for (var j = 0; j < count.right; j++) corner(g, n, j);
     }
 
-    // RIGHT click -> pudhu column + ippo irukkura ella top rows
+    
     if (side == "right") {
       for (var i = 0; i < count.top; i++) corner(g, i, n);
     }
