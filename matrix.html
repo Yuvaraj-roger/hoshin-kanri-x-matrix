@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<body>
+<body style="display:flex; justify-content:center; margin:0;">
 
 <svg id="m" width="580" height="500" viewBox="0 0 580 500"
      font-family="Arial" font-weight="bold">
@@ -43,12 +43,20 @@
   var BOX = 'fill="white" stroke="#666" stroke-width="1" ' +
             'vector-effect="non-scaling-stroke" shape-rendering="crispEdges"';
 
-  
-  function corner(g, row, col) {
-    var x = 463 + 18 * col;     
-    var y = 85 - 16 * row;     
+  function colX(side, n) {
+    if (side == "right") return 463 + 18 * n;
+    return 95 - 18 * n;
+  }
+
+  function rowY(side, n) {
+    if (side == "bottom") return 391 + 16 * n;
+    return 85 - 16 * n;
+  }
+
+  function corner(g, rowSide, row, colSide, col) {
     g.insertAdjacentHTML("beforeend",
-      '<rect x="' + x + '" y="' + y + '" width="18" height="16" ' + BOX + '/>');
+      '<rect x="' + colX(colSide, col) + '" y="' + rowY(rowSide, row) +
+      '" width="18" height="16" ' + BOX + '/>');
   }
 
   function add(side) {
@@ -58,25 +66,25 @@
     var s = "";
 
     if (side == "top") {
-      var y = 85 - 16 * n;
+      var y = rowY("top", n);
       s = '<rect x="113" y="' + y + '" width="350" height="16" ' + BOX + '/>' +
           '<text x="288" y="' + (y + 8) + '" text-anchor="middle" dominant-baseline="central" font-size="12">Top-Level Priority</text>';
     }
 
     if (side == "bottom") {
-      var y = 391 + 16 * n;
+      var y = rowY("bottom", n);
       s = '<rect x="113" y="' + y + '" width="350" height="16" ' + BOX + '/>' +
           '<text x="288" y="' + (y + 8) + '" text-anchor="middle" dominant-baseline="central" font-size="12">Long-Term Goal</text>';
     }
 
     if (side == "left") {
-      var x = 95 - 18 * n;
+      var x = colX("left", n);
       s = '<rect x="' + x + '" y="101" width="18" height="290" ' + BOX + '/>' +
           '<text x="' + (x + 9) + '" y="246" text-anchor="middle" dominant-baseline="central" font-size="12" transform="rotate(-90 ' + (x + 9) + ' 246)">Annual Objective</text>';
     }
 
     if (side == "right") {
-      var x = 463 + 18 * n;
+      var x = colX("right", n);
       s = '<rect x="' + x + '" y="101" width="18" height="290" ' + BOX + '/>' +
           '<text x="' + (x + 9) + '" y="246" text-anchor="middle" dominant-baseline="central" font-size="12" transform="rotate(-90 ' + (x + 9) + ' 246)">Metric to Improve</text>';
     }
@@ -84,14 +92,14 @@
     g.insertAdjacentHTML("beforeend", s);
     count[side]++;
 
-    
-    if (side == "top") {
-      for (var j = 0; j < count.right; j++) corner(g, n, j);
+    if (side == "top" || side == "bottom") {
+      for (var j = 0; j < count.left;  j++) corner(g, side, n, "left",  j);
+      for (var j = 0; j < count.right; j++) corner(g, side, n, "right", j);
     }
 
-    
-    if (side == "right") {
-      for (var i = 0; i < count.top; i++) corner(g, i, n);
+    if (side == "left" || side == "right") {
+      for (var i = 0; i < count.top;    i++) corner(g, "top",    i, side, n);
+      for (var i = 0; i < count.bottom; i++) corner(g, "bottom", i, side, n);
     }
   }
 </script>
